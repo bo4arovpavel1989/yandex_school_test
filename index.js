@@ -13,6 +13,9 @@ $(document).ready(function(){
 });
 
 var myForm={
+	fio:'#myForm>input[name="fio"]',
+	email:'#myForm>input[name="email"]',
+	phone:'#myForm>input[name="phone"]',
 	validate: function(){
 			var objectToReturn={
 				errorFields:[],
@@ -21,24 +24,24 @@ var myForm={
 			$('input').each(function(){
 				$(this).removeClass('error');
 			});
-			var fio = $('#myForm>input[name="fio"]').val();
-			var email = $('#myForm>input[name="email"]').val()
-			var phone = $('#myForm>input[name="phone"]').val();
+			var fio = $(myForm.fio).val();
+			var email = $(myForm.email).val()
+			var phone = $(myForm.phone).val();
 			var patterns={
 				fio:/^[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}$/,
 				email:/^\w{1,}@(ya|yandex)\.(ru|ua|kz|by|com)$/,
 				phone:/^\+7\(\d\d\d\)\d\d\d-\d\d-\d\d$/
 				};
-			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push('#myForm>input[name="fio"]');
-			if(email.match(patterns.email)==null) objectToReturn.errorFields.push('#myForm>input[name="email"]');
-			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push('#myForm>input[name="phone"]');
+			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push(myForm.fio);
+			if(email.match(patterns.email)==null) objectToReturn.errorFields.push(myForm.email);
+			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push(myForm.phone);
 			else {
 				var phoneArray=phone.split('');
 				var sum=0;
 				phoneArray.forEach(function(item){
 					if (!isNaN(parseInt (item))) sum += parseInt (item);
 				});
-				if(sum>30) objectToReturn.errorFields.push('#myForm>input[name="phone"]');
+				if(sum>30) objectToReturn.errorFields.push(myForm.phone);
 			}
 			objectToReturn.errorFields.forEach(function(field){
 				$(field).addClass('error');
@@ -47,20 +50,16 @@ var myForm={
 			return objectToReturn;
 	},
 	getData:function(){
-			var fio = $('#myForm>input[name="fio"]').val();
-			var email = $('#myForm>input[name="email"]').val()
-			var phone = $('#myForm>input[name="phone"]').val();
-			var objectToReturn={
-				fio:fio,
-				email:email,
-				phone:phone
+			return {
+				fio:$(myForm.fio).val(),
+				email:$(myForm.email).val(),
+				phone:$(myForm.phone).val()
 			};
-			return objectToReturn;
 	},
 	setData: function(object){
-		$('#myForm>input[name="fio"]').val(object.fio);
-		$('#myForm>input[name="email"]').val(object.email)
-		$('#myForm>input[name="phone"]').val(object.phone);
+		$(myForm.fio).val(object.fio);
+		$(myForm.email).val(object.email)
+		$(myForm.phone).val(object.phone);
 	},
 	submit: function(){
 		$('#myForm').on('submit',function(e){
