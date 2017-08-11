@@ -11,18 +11,17 @@ var myForm={
 			$('input').each(function(){
 				$(this).removeClass('error');
 			});
-		    var form=document.forms.myForm;
-			var fio = form.elements.fio.value;
-			var email = form.elements.email.value;
-			var phone = form.elements.phone.value;
-			var regexps={
+			var fio = $('#fio').val();
+			var email = $('#email').val()
+			var phone = $('#phone').val();
+			var patterns={
 				fio:/^[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}$/,
 				email:/^\w{1,}@(ya|yandex)\.(ru|ua|kz|by|com)$/,
 				phone:/^\+7\(\d\d\d\)\d\d\d-\d\d-\d\d$/
 				};
-			if(fio.match(regexps.fio)==null) objectToReturn.errorFields.push('#fio');
-			if(email.match(regexps.email)==null) objectToReturn.errorFields.push('#email');
-			if (phone.match(regexps.phone)==null) objectToReturn.errorFields.push('#phone');
+			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push('#fio');
+			if(email.match(patterns.email)==null) objectToReturn.errorFields.push('#email');
+			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push('#phone');
 			else {
 				var phoneArray=phone.split('');
 				var sum=0;
@@ -34,11 +33,19 @@ var myForm={
 			objectToReturn.errorFields.forEach(function(field){
 				$(field).addClass('error');
 			});
-			if(objectToReturn.errorFields==0)objectToReturn.isValid=true;
+			if(objectToReturn.errorFields.length==0)objectToReturn.isValid=true;
 			return objectToReturn;
 	},
 	getData:function(){
-		
+			var fio = $('#fio').val();
+			var email = $('#email').val()
+			var phone = $('phone').val();
+			var objectToReturn={
+				fio:fio,
+				email:email,
+				phone:phone
+			};
+			return objectToReturn;
 	},
 	setData: function(object){
 		
@@ -56,7 +63,12 @@ var myForm={
 					url:queries[queryIndex],
 					dataType: 'json',
 					success:function(answer){
-						console.log(answer.status);
+						$('#resultContainer').empty();
+						$('#resultContainer').removeClass();
+						$('#resultContainer').addClass(answer.status);
+						if(answer.status=='success')$('#resultContainer').append('Success');
+						if(answer.status=='error')$('#resultContainer').append(answer.reason);
+						if(answer.status=='progress')setTimeout(function(){$('#myForm').submit()},answer.timeout);
 					}
 				});
 			}
