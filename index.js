@@ -24,24 +24,24 @@ var myForm={
 			$('input').each(function(){
 				$(this).removeClass('error');
 			});
-			var fio = $(myForm.fio).val();
-			var email = $(myForm.email).val()
-			var phone = $(myForm.phone).val();
+			var fio = $(this.fio).val();
+			var email = $(this.email).val()
+			var phone = $(this.phone).val();
 			var patterns={
 				fio:/^[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}$/,
 				email:/^\w{1,}@(ya|yandex)\.(ru|ua|kz|by|com)$/,
 				phone:/^\+7\(\d\d\d\)\d\d\d-\d\d-\d\d$/
 				};
-			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push(myForm.fio);
-			if(email.match(patterns.email)==null) objectToReturn.errorFields.push(myForm.email);
-			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push(myForm.phone);
+			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push(this.fio);
+			if(email.match(patterns.email)==null) objectToReturn.errorFields.push(this.email);
+			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push(this.phone);
 			else {
 				var phoneArray=phone.split('');
 				var sum=0;
 				phoneArray.forEach(function(item){
 					if (!isNaN(parseInt (item))) sum += parseInt (item);
 				});
-				if(sum>30) objectToReturn.errorFields.push(myForm.phone);
+				if(sum>30) objectToReturn.errorFields.push(this.phone);
 			}
 			objectToReturn.errorFields.forEach(function(field){
 				$(field).addClass('error');
@@ -51,20 +51,21 @@ var myForm={
 	},
 	getData:function(){
 			return {
-				fio:$(myForm.fio).val(),
-				email:$(myForm.email).val(),
-				phone:$(myForm.phone).val()
+				fio:$(this.fio).val(),
+				email:$(this.email).val(),
+				phone:$(this.phone).val()
 			};
 	},
 	setData: function(object){
-		$(myForm.fio).val(object.fio);
-		$(myForm.email).val(object.email)
-		$(myForm.phone).val(object.phone);
+		$(this.fio).val(object.fio);
+		$(this.email).val(object.email)
+		$(this.phone).val(object.phone);
 	},
 	submit: function(){
+		var that=this;
 		$('#myForm').on('submit',function(e){
 			e.preventDefault();
-			var answer=myForm.validate();
+			var answer=that.validate();
 			if(answer.isValid){
 				document.getElementById('submitButton').disabled = true;
 				var getRandomInt = function (min, max){return Math.floor(Math.random() * (max - min + 1)) + min;};
