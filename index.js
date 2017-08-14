@@ -1,5 +1,8 @@
 $(document).ready(function(){
-	myForm.submit();
+	$('#myForm').on('submit',function(e){
+		e.preventDefault();
+		myForm.submit();
+	});
 	$('#getData').on('click',function(){
 		console.log(myForm.getData());
 	});
@@ -62,10 +65,8 @@ var myForm={
 		$(this.phone).val(object.phone);
 	},
 	submit: function(){
-		var that=this;
-		$('#myForm').on('submit',function(e){
-			e.preventDefault();
-			var answer=that.validate();
+			var that=this;
+			var answer=this.validate();
 			if(answer.isValid){
 				document.getElementById('submitButton').disabled = true;
 				var getRandomInt = function (min, max){return Math.floor(Math.random() * (max - min + 1)) + min;};
@@ -80,14 +81,13 @@ var myForm={
 						$('#resultContainer').addClass(answer.status);
 						if(answer.status=='success')$('#resultContainer').append('Success');
 						if(answer.status=='error')$('#resultContainer').append(answer.reason);
-						if(answer.status=='progress')setTimeout(function(){$('#myForm').submit()},answer.timeout);
+						if(answer.status=='progress')setTimeout(function(){that.submit()},answer.timeout);
 					},
 					error:function(e){
 						console.log(e);
 					}
 				});
 			}
-		});
 	}
 };
 
