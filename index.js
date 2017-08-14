@@ -27,19 +27,17 @@ var myForm={
 			$('input').each(function(){
 				$(this).removeClass('error');
 			});
-			var fio = $(this.fio).val();
-			var email = $(this.email).val()
-			var phone = $(this.phone).val();
+			var data=this.getData();
 			var patterns={
 				fio:/^[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}$/,
 				email:/^\w{1,}@(ya|yandex)\.(ru|ua|kz|by|com)$/,
 				phone:/^\+7\(\d\d\d\)\d\d\d-\d\d-\d\d$/
 				};
-			if(fio.match(patterns.fio)==null) objectToReturn.errorFields.push(this.fio);
-			if(email.match(patterns.email)==null) objectToReturn.errorFields.push(this.email);
-			if (phone.match(patterns.phone)==null) objectToReturn.errorFields.push(this.phone);
+			if(data.fio.match(patterns.fio)==null) objectToReturn.errorFields.push(this.fio);
+			if(data.email.match(patterns.email)==null) objectToReturn.errorFields.push(this.email);
+			if (data.phone.match(patterns.phone)==null) objectToReturn.errorFields.push(this.phone);
 			else {
-				var phoneArray=phone.split('');
+				var phoneArray=data.phone.split('');
 				var sum=0;
 				phoneArray.forEach(function(item){
 					if (!isNaN(parseInt (item))) sum += parseInt (item);
@@ -60,9 +58,11 @@ var myForm={
 			};
 	},
 	setData: function(object){
-		$(this.fio).val(object.fio);
-		$(this.email).val(object.email)
-		$(this.phone).val(object.phone);
+		if(object){
+			$(this.fio).val(object.fio);
+			$(this.email).val(object.email)
+			$(this.phone).val(object.phone);
+		}
 	},
 	submit: function(){
 			var that=this;
