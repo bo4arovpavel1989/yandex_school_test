@@ -10,7 +10,8 @@ $(document).ready(function(){
 		myForm.setData({
 			fio:"qwe qwe qqw",
 			email:"qwe@ya.ru",
-			phone:"+7(111)111-11-11"
+			phone:"+7(111)111-11-11",
+			validate:123
 		});
 	});
 });
@@ -19,6 +20,18 @@ var myForm={
 	fio:'#myForm>input[name="fio"]',
 	email:'#myForm>input[name="email"]',
 	phone:'#myForm>input[name="phone"]',
+	getData:function(){
+			var objectToReturn={};
+			$('#myForm>input').each(function(){
+				objectToReturn[$(this).attr('name')]=$(this).val();
+			});
+			return objectToReturn;
+	},
+	setData: function(object){
+		if(object)for (prop in object){
+					if(typeof(this[prop])==='string') $(this[prop]).val(object[prop]);
+				}			
+	},
 	validate: function(){
 			var objectToReturn={
 				errorFields:[],
@@ -50,20 +63,7 @@ var myForm={
 			if(objectToReturn.errorFields.length==0)objectToReturn.isValid=true;
 			return objectToReturn;
 	},
-	getData:function(){
-			return {
-				fio:$(this.fio).val(),
-				email:$(this.email).val(),
-				phone:$(this.phone).val()
-			};
-	},
-	setData: function(object){
-		if(object){
-			$(this.fio).val(object.fio);
-			$(this.email).val(object.email)
-			$(this.phone).val(object.phone);
-		}
-	},
+	
 	submit: function(){
 			var that=this;
 			var answer=this.validate();
