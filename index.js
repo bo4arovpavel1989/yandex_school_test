@@ -16,7 +16,7 @@ $(document).ready(function(){
 	});
 });
 
-var myForm={
+const myForm={
 	fio:'#myForm>input[name="fio"]',
 	email:'#myForm>input[name="email"]',
 	phone:'#myForm>input[name="phone"]',
@@ -42,28 +42,27 @@ var myForm={
 			});
 			var data=this.getData();
 			var patterns={
-				fio:/^[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}\s[A-Za-zА-Яа-яЁё]{1,}$/,
-				email:/^\w{1,}@(ya|yandex)\.(ru|ua|kz|by|com)$/,
-				phone:/^\+7\(\d\d\d\)\d\d\d-\d\d-\d\d$/
+				fio:/^([A-Za-zА-Яа-яЁё]{1,}\s){2}[A-Za-zА-Яа-яЁё]{1,}$/,
+				email:/^[^\s]{1,}@ya(ndex)?\.(ru|ua|kz|by|com)$/,
+				phone:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/
 				};
 			if(data.fio.match(patterns.fio)==null) objectToReturn.errorFields.push(this.fio);
 			if(data.email.match(patterns.email)==null) objectToReturn.errorFields.push(this.email);
 			if (data.phone.match(patterns.phone)==null) objectToReturn.errorFields.push(this.phone);
 			else {
-				var phoneArray=data.phone.split('');
+				var phoneArray=data.phone.match(/\d{1}/g);
 				var sum=0;
 				phoneArray.forEach(function(item){
-					if (!isNaN(parseInt (item))) sum += parseInt (item);
+					 sum += parseInt (item);
 				});
 				if(sum>30) objectToReturn.errorFields.push(this.phone);
 			}
-			objectToReturn.errorFields.forEach(function(field){
-				$(field).addClass('error');
-			});
 			if(objectToReturn.errorFields.length==0)objectToReturn.isValid=true;
+			else objectToReturn.errorFields.forEach(function(field){
+					$(field).addClass('error');
+				});	
 			return objectToReturn;
-	},
-	
+	},	
 	submit: function(){
 			var that=this;
 			var answer=this.validate();
