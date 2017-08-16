@@ -3,9 +3,11 @@ $(document).ready(function(){
 		e.preventDefault();
 		myForm.submit();
 	});
+	
 	$('#getData').on('click',function(){
 		console.log(myForm.getData());
 	});
+	
 	$('#setData').on('click',function(){
 		myForm.setData({
 			fio:"qwe qwe qqw",
@@ -22,9 +24,11 @@ const myForm={
 	phone:'#myForm>input[name="phone"]',
 	getData:function(){
 			var objectToReturn={};
+			
 			$('#myForm>input').each(function(){
 				objectToReturn[$(this).attr('name')]=$(this).val();
 			});
+			
 			return objectToReturn;
 	},
 	setData: function(object){
@@ -33,23 +37,26 @@ const myForm={
 				}			
 	},
 	validate: function(){
+			$('input').each(function(){
+				$(this).removeClass('error');
+			});
+			
 			var objectToReturn={
 				errorFields:[],
 				isValid: false
 			};
-			$('input').each(function(){
-				$(this).removeClass('error');
-			});
 			var data=this.getData();
 			var patterns={
 				fio:/^([A-Za-zА-Яа-яЁё]{1,}\s){2}[A-Za-zА-Яа-яЁё]{1,}$/,
 				email:/^[^\s]{1,}@ya(ndex)?\.(ru|ua|kz|by|com)$/,
 				phone:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/
-				};
-			if(data.fio.match(patterns.fio)==null) objectToReturn.errorFields.push(this.fio);
-			if(data.email.match(patterns.email)==null) objectToReturn.errorFields.push(this.email);
-			if (data.phone.match(patterns.phone)==null) objectToReturn.errorFields.push(this.phone);
-			else {
+			};
+			
+			for (prop in data){
+				if(data[prop].match(patterns[prop])==null)objectToReturn.errorFields.push(this[prop]);
+			}	
+			
+			if(objectToReturn.errorFields.indexOf(this.phone)===-1){//start checking sum only if it matches phone pattern
 				var phoneArray=data.phone.match(/\d{1}/g);
 				var sum=0;
 				phoneArray.forEach(function(item){
@@ -57,20 +64,25 @@ const myForm={
 				});
 				if(sum>30) objectToReturn.errorFields.push(this.phone);
 			}
+			
 			if(objectToReturn.errorFields.length==0)objectToReturn.isValid=true;
 			else objectToReturn.errorFields.forEach(function(field){
 					$(field).addClass('error');
 				});	
+				
 			return objectToReturn;
 	},	
 	submit: function(){
 			var that=this;
 			var answer=this.validate();
+			
 			if(answer.isValid){
 				document.getElementById('submitButton').disabled = true;
+				
 				var getRandomInt = function (min, max){return Math.floor(Math.random() * (max - min + 1)) + min;};
 				var queries=['queries/success.json','queries/error.json','queries/progress.json'];
 				var queryIndex=getRandomInt(0,2);
+				
 				$.ajax({
 					url:queries[queryIndex],
 					dataType: 'json',
