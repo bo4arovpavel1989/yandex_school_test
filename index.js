@@ -48,7 +48,7 @@ const myForm={
 			var data=this.getData();
 			var patterns={
 				fio:/^([A-Za-zА-Яа-яЁё]{1,}\s){2}[A-Za-zА-Яа-яЁё]{1,}$/,
-				email:/^[^\s]{1,}@ya(ndex)?\.(ru|ua|kz|by|com)$/,
+				email:/^[^\s]{1,}@(ya\.ru)|(yandex\.(ru|ua|kz|by|com))$/,
 				phone:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/
 			};
 			
